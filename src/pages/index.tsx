@@ -1,4 +1,3 @@
-import localFont from "next/font/local";
 import { useState, useEffect } from 'react';  
 import axios from 'axios';  
 
