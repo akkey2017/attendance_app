@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 date,  
                 status,  
                 userImage,  
-                meetingIndexes: meetingIndexes || [],  
+                meetingIndexes: meetingIndexes.sort() || [],  
                 comment: comment || ''  
             };  
 
