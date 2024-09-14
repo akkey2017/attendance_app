@@ -93,7 +93,7 @@ const Home = () => {
 
   return (  
     <div className={styles.container}>  
-      <h1>Welcome, {session.user.name}</h1>  
+      <h1>Welcome, {session.user?.name}</h1>  
       <button onClick={() => signOut()}>Sign out</button>  
       
       <ul className={styles['attendance-list']}>  
@@ -134,7 +134,7 @@ const Home = () => {
         {attendances.map((attendance, index) => (  
           <li key={index} className={styles['attendance-item']}>  
             {attendance.userId} | {attendance.date} | {attendance.status ? '出席' : '欠席'} | {new Date(attendance.timestamp!).toLocaleString()}  
-            {session?.user.name === attendance.userId && (  
+            {session?.user?.name === attendance.userId && (  
               <button onClick={() => handleDelete(attendance.date)} className={styles.deleteButton}>削除</button>  
             )}  
           </li>  
