@@ -145,7 +145,7 @@ const Home = () => {
   };  
 
   const meetingTimesForDate = (date: string) => {  
-    return meetingTimes.find(meeting => meeting.date === date);  
+    return meetingTimes.find(meeting => meeting.date === date) || { startTime: '21:00', repeatCount: 4 };  
   };  
 
   if (status === 'loading') return <div>Loading...</div>;  
@@ -154,7 +154,9 @@ const Home = () => {
     return (  
       <div className="p-6 text-center">  
         <h1 className="text-2xl font-bold mb-4">出欠シート</h1>  
-        <button className="px-4 py-2 bg-green-500 text-white rounded" onClick={() => signIn('line')}>LINEアカウントでサインイン</button>  
+        <button className="px-4 py-2 bg-green-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95" onClick={() => signIn('line')}>  
+          LINEアカウントでサインイン  
+        </button>  
       </div>  
     );  
   }  
@@ -162,20 +164,22 @@ const Home = () => {
   return (  
     <div className="container mx-auto p-6">  
       <h1 className="text-xl font-bold mb-4">{session.user?.name} でログイン中</h1>  
-      <button className="px-4 py-2 bg-red-500 text-white rounded mb-6" onClick={() => signOut()}>サインアウト</button>  
+      <button className="px-4 py-2 bg-red-500 text-white rounded mb-6 transition duration-200 ease-in-out transform hover:scale-105 active:scale-95" onClick={() => signOut()}>  
+        サインアウト  
+      </button>  
       
       <ul className="space-y-4">  
         {dates.map((date, index) => {  
           const attendingUsers = getUsersStatusForDate(date, true);  
           const userResponse = attendances.find((att) => att.date === date);  
-          const meetingTime = meetingTimesForDate(date) || { startTime: '21:00', repeatCount: 4 };  
+          const meetingTime = meetingTimesForDate(date);  
 
           return (  
-            <li key={index} className="flex items-center justify-between p-4 bg-gray-100 rounded shadow">  
+            <li key={index} className="flex items-center justify-between p-4 bg-gray-100 rounded shadow transition duration-200 ease-in-out">  
               <div className="flex items-center">  
                 <button   
                   onClick={() => setActiveDate(date)}   
-                  className="mr-4 px-2 py-1 bg-gray-300 text-black rounded">  
+                  className="mr-4 px-2 py-1 bg-gray-300 text-black rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">  
                   編集  
                 </button>  
                 <span className="text-lg">{formatDateWithoutYear(date)}</span>  
@@ -185,10 +189,10 @@ const Home = () => {
               </div>  
               {!hasUserRespondedForDate(date) ? (  
                 <div className="flex space-x-2">  
-                  <button onClick={() => handleVote(date, true)} className="px-4 py-2 bg-blue-500 text-white rounded">  
+                  <button onClick={() => handleVote(date, true)} className="px-4 py-2 bg-blue-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">  
                     出席  
                   </button>  
-                  <button onClick={() => handleVote(date, false)} className="px-4 py-2 bg-red-500 text-white rounded">  
+                  <button onClick={() => handleVote(date, false)} className="px-4 py-2 bg-red-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">  
                     欠席  
                   </button>  
                 </div>  
@@ -200,7 +204,7 @@ const Home = () => {
                         <img  
                           src={user.userImage}  
                           alt={user.userId}  
-                          className="w-8 h-8 rounded-full"  
+                          className="w-8 h-8 rounded-full transition duration-200 ease-in-out transform hover:scale-105 active:scale-95"  
                         />  
                         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 pointer-events-none">  
                           {user.userId}  
@@ -208,7 +212,9 @@ const Home = () => {
                       </div>  
                     ))}  
                   </div>  
-                  <button onClick={() => handleDelete(date)} className="px-4 py-2 bg-yellow-500 text-black rounded">修正</button>  
+                  <button onClick={() => handleDelete(date)} className="px-4 py-2 bg-yellow-500 text-black rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">  
+                    修正  
+                  </button>  
                 </div>  
               )}
             </li>  
@@ -226,7 +232,7 @@ const Home = () => {
                 type="time"   
                 value={startTime}   
                 onChange={(e) => setStartTime(e.target.value)}   
-                className="block w-full mt-1 border-gray-300 rounded-md"  
+                className="block w-full mt-1 border-gray-300 rounded-md transition duration-200 ease-in-out transform hover:scale-105 active:scale-95"  
               />  
             </label>  
             <label className="block mb-4">  
@@ -236,7 +242,7 @@ const Home = () => {
                 value={repeatCount}   
                 onChange={(e) => setRepeatCount(Number(e.target.value))}   
                 min="1"  
-                className="block w-full mt-1 border-gray-300 rounded-md"  
+                className="block w-full mt-1 border-gray-300 rounded-md transition duration-200 ease-in-out transform hover:scale-105 active:scale-95"  
               />  
             </label>  
             <div className="mb-4">  
@@ -245,10 +251,10 @@ const Home = () => {
             <div className="flex space-x-2">  
               <button   
                 onClick={handleMeetingTimeUpdate}   
-                className="px-4 py-2 bg-blue-500 text-white rounded">保存</button>  
+                className="px-4 py-2 bg-blue-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">保存</button>  
               <button   
                 onClick={() => setActiveDate(null)}   
-                className="px-4 py-2 bg-red-500 text-white rounded">キャンセル</button>  
+                className="px-4 py-2 bg-red-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">キャンセル</button>  
             </div>  
           </div>  
         </div>  
