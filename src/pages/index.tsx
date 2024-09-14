@@ -3,7 +3,6 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import { useEffect, useState } from 'react';  
 import axios from 'axios';  
 import { generateNextWeekDates } from '../utils/dateHelpers';  
-import styles from '../styles/Home.module.css';  
 
 type Attendance = {  
   userId: string;  
@@ -16,7 +15,7 @@ type Attendance = {
 const Home = () => {  
   const { data: session, status } = useSession();  
   const [attendances, setAttendances] = useState<Attendance[]>([]);  
-  const [myattendances, setMyAttendances] = useState<Attendance[]>([]);
+  const [myAttendances, setMyAttendances] = useState<Attendance[]>([]);  
   const dates = generateNextWeekDates();  
 
   const fetchAttendances = async () => {  
@@ -28,7 +27,7 @@ const Home = () => {
       const userAttendances = allAttendances.filter((att: Attendance) => att.userId === session?.user?.name);  
 
       setAttendances(allAttendances);  
-      setMyAttendances(userAttendances);
+      setMyAttendances(userAttendances);  
     } catch (error) {  
       console.error('Failed to fetch attendances', error);  
     }  
@@ -79,55 +78,55 @@ const Home = () => {
   };  
 
   const hasUserRespondedForDate = (date: string) => {  
-    return myattendances.some((attendance) => attendance.date === date);  
+    return myAttendances.some((attendance) => attendance.date === date);  
   };  
 
   if (status === 'loading') return <div>Loading...</div>;  
 
   if (!session) {  
     return (  
-      <div>  
-        <h1>出欠シート</h1>  
-        <button onClick={() => signIn('line')}>LINEアカウントでサインイン</button>  
+      <div className="p-6 text-center">  
+        <h1 className="text-2xl font-bold mb-4">出欠シート</h1>  
+        <button className="px-4 py-2 bg-green-500 text-white rounded" onClick={() => signIn('line')}>LINEアカウントでサインイン</button>  
       </div>  
     );  
   }  
 
   return (  
-    <div className={styles.container}>  
-      <h1>{session.user?.name} でログイン中</h1>  
-      <button onClick={() => signOut()}>サインアウト</button>  
+    <div className="container mx-auto p-6">  
+      <h1 className="text-xl font-bold mb-4">{session.user?.name} でログイン中</h1>  
+      <button className="px-4 py-2 bg-red-500 text-white rounded mb-6" onClick={() => signOut()}>サインアウト</button>  
       
-      <ul className={styles['attendance-list']}>  
+      <ul className="space-y-4">  
         {dates.map((date, index) => {  
           const attendingUsers = getUsersStatusForDate(date, true); // 出席者を取得   
           const userResponse = attendances.find(att => att.date === date);  
 
           return (  
-            <li key={index} className={styles['attendance-item']}>  
-              <span className={styles.dateText}>{date}</span>  
+            <li key={index} className="flex items-center justify-between p-4 bg-gray-100 rounded shadow">  
+              <span className="text-lg">{date}</span>  
               {!hasUserRespondedForDate(date) ? (  
-                <>  
-                  <button onClick={() => handleVote(date, true)} className={styles.button}>  
+                <div className="flex space-x-2">  
+                  <button onClick={() => handleVote(date, true)} className="px-4 py-2 bg-blue-500 text-white rounded">  
                     出席  
                   </button>  
-                  <button onClick={() => handleVote(date, false)} className={styles.button}>  
+                  <button onClick={() => handleVote(date, false)} className="px-4 py-2 bg-red-500 text-white rounded">  
                     欠席  
                   </button>  
-                </>  
+                </div>  
               ) : (  
-                <div className={styles.attendanceActionContainer}>  
-                  <div className={styles.attendingUsers}>  
+                <div className="flex items-center space-x-2">  
+                  <div className="flex space-x-2">  
                     {attendingUsers.map((user, idx) => (  
                       <img  
                         src={user.userImage}  
                         alt={user.userId}  
                         key={idx}  
-                        className={styles.userIcon}  
+                        className="w-8 h-8 rounded-full"  
                       />  
                     ))}  
                   </div>  
-                  <button onClick={() => handleDelete(date)} className={styles.modifyButton}>修正</button>  
+                  <button onClick={() => handleDelete(date)} className="px-4 py-2 bg-yellow-500 text-black rounded">修正</button>  
                 </div>  
               )}  
             </li>  
