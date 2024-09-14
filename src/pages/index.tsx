@@ -85,16 +85,16 @@ const Home = () => {
   if (!session) {  
     return (  
       <div>  
-        <h1>Attendance Management</h1>  
-        <button onClick={() => signIn('line')}>Sign in with LINE</button>  
+        <h1>出欠シート</h1>  
+        <button onClick={() => signIn('line')}>LINEアカウントでサインイン</button>  
       </div>  
     );  
   }  
 
   return (  
     <div className={styles.container}>  
-      <h1>Welcome, {session.user?.name}</h1>  
-      <button onClick={() => signOut()}>Sign out</button>  
+      <h1>{session.user?.name} でログイン中</h1>  
+      <button onClick={() => signOut()}>サインアウト</button>  
       
       <ul className={styles['attendance-list']}>  
         {dates.map((date, index) => {  
@@ -129,7 +129,7 @@ const Home = () => {
         })}  
       </ul>  
 
-      <h2>Recorded Attendances</h2>  
+      <h2>出欠履歴</h2>  
       <ul className={styles['attendance-list']}>  
         {attendances.map((attendance, index) => (  
           <li key={index} className={styles['attendance-item']}>  
