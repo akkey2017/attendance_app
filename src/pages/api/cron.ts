@@ -4,6 +4,7 @@ import { getPastDate } from '../../utils/dateHelpers';
 
 const deleteExpiredAttendances = async (db: any) => {  
     const pastWeekDate = getPastDate(7); // 過去7日間の開始日  
+    console.log('Deleting attendances before: ', pastWeekDate);
     try {  
         await db.collection('attendances').deleteMany({ date: { $lt: pastWeekDate } });  
         console.log('Expired attendances deleted');  

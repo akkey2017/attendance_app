@@ -9,7 +9,6 @@ export function generateNextWeekDates() {
             formatISO(add(startDate, { days: i }), { representation: "date" })
         );
     }
-    console.log(dates);
     return dates;
 }
 
