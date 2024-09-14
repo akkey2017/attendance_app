@@ -235,7 +235,7 @@ const Home = () => {
       <div className="p-6 text-center">  
         <h1 className="text-2xl font-bold mb-4">出欠シート</h1>  
         <button className="px-4 py-2 bg-green-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95" onClick={() => signIn('line')}>  
-          LINEアカウントでサインイン  
+          LINEアカウントでログイン  
         </button>  
       </div>  
     );  
@@ -250,7 +250,7 @@ const Home = () => {
         <h1 className="text-2xl font-bold mb-4">出欠シート</h1>  
         <p className="text-lg text-red-500">このアプリは利用できません</p>  
         <button className="px-4 py-2 bg-red-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95" onClick={() => signOut()}>  
-          サインアウト  
+          ログアウト
         </button>  
       </div>  
     );
@@ -261,7 +261,7 @@ const Home = () => {
     <div className="container mx-auto p-6">  
       <h1 className="text-xl font-bold mb-4">{session.user?.name} でログイン中</h1>  
       <button className="px-4 py-2 bg-red-500 text-white rounded mb-6 transition duration-200 ease-in-out transform hover:scale-105 active:scale-95" onClick={() => signOut()}>  
-        サインアウト  
+        ログアウト
       </button>  
       
       <ul className="space-y-4">  
