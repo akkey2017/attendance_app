@@ -6,12 +6,10 @@ if (!process.env.MONGODB_URI) {
 }
 
 const uri = process.env.MONGODB_URI;
-let client;
-let clientPromise: Promise<MongoClient>;
 
 
-client = new MongoClient(uri);
-clientPromise = client.connect();
+const client = new MongoClient(uri);
+const clientPromise: Promise<MongoClient> = client.connect();
 
 export async function connectToDatabase() {
     const client = await clientPromise;
