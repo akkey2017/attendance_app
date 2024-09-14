@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../lib/mongodb';
 import Attendance from '../../models/Attendance';
