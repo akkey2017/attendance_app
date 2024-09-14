@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable camelcase */  
 import { useSession, signIn, signOut } from 'next-auth/react';  
 import { useEffect, useState } from 'react';  
 import axios from 'axios';  
@@ -9,13 +9,14 @@ type Attendance = {
   userId: string;  
   date: string;  
   status: boolean;  
-  userImage?: string; // アイコンのURL 
-  timestamp?: string; 
+  userImage?: string; // アイコンのURL   
+  timestamp?: string;   
 };  
 
 const Home = () => {  
   const { data: session, status } = useSession();  
   const [attendances, setAttendances] = useState<Attendance[]>([]);  
+  const [myattendances, setMyAttendances] = useState<Attendance[]>([]);
   const dates = generateNextWeekDates();  
 
   const fetchAttendances = async () => {  
@@ -26,7 +27,8 @@ const Home = () => {
       // 自分の出欠情報のみフィルタリング  
       const userAttendances = allAttendances.filter((att: Attendance) => att.userId === session?.user?.name);  
 
-      setAttendances(userAttendances);  
+      setAttendances(allAttendances);  
+      setMyAttendances(userAttendances);
     } catch (error) {  
       console.error('Failed to fetch attendances', error);  
     }  
@@ -77,7 +79,7 @@ const Home = () => {
   };  
 
   const hasUserRespondedForDate = (date: string) => {  
-    return attendances.some((attendance) => attendance.date === date);  
+    return myattendances.some((attendance) => attendance.date === date);  
   };  
 
   if (status === 'loading') return <div>Loading...</div>;  
@@ -98,11 +100,12 @@ const Home = () => {
       
       <ul className={styles['attendance-list']}>  
         {dates.map((date, index) => {  
-          const attendingUsers = getUsersStatusForDate(date, true); // 出席者を取得  
-          
+          const attendingUsers = getUsersStatusForDate(date, true); // 出席者を取得   
+          const userResponse = attendances.find(att => att.date === date);  
+
           return (  
             <li key={index} className={styles['attendance-item']}>  
-              <span>{date}</span>  
+              <span className={styles.dateText}>{date}</span>  
               {!hasUserRespondedForDate(date) ? (  
                 <>  
                   <button onClick={() => handleVote(date, true)} className={styles.button}>  
@@ -113,32 +116,23 @@ const Home = () => {
                   </button>  
                 </>  
               ) : (  
-                <div className={`${styles['attending-users']} ${styles['has-responded']}`}>  
-                  {attendingUsers.map((user, idx) => (  
-                    <img  
-                      src={user.userImage}  
-                      alt={user.userId}  
-                      key={idx}  
-                      className={styles['user-icon']}  
-                    />  
-                  ))}  
+                <div className={styles.attendanceActionContainer}>  
+                  <div className={styles.attendingUsers}>  
+                    {attendingUsers.map((user, idx) => (  
+                      <img  
+                        src={user.userImage}  
+                        alt={user.userId}  
+                        key={idx}  
+                        className={styles.userIcon}  
+                      />  
+                    ))}  
+                  </div>  
+                  <button onClick={() => handleDelete(date)} className={styles.modifyButton}>修正</button>  
                 </div>  
               )}  
             </li>  
           );  
         })}  
-      </ul>  
-
-      <h2>出欠履歴</h2>  
-      <ul className={styles['attendance-list']}>  
-        {attendances.map((attendance, index) => (  
-          <li key={index} className={styles['attendance-item']}>  
-            {attendance.userId} | {attendance.date} | {attendance.status ? '出席' : '欠席'} | {new Date(attendance.timestamp!).toLocaleString()}  
-            {session?.user?.name === attendance.userId && (  
-              <button onClick={() => handleDelete(attendance.date)} className={styles.deleteButton}>削除</button>  
-            )}  
-          </li>  
-        ))}  
       </ul>  
     </div>  
   );  
