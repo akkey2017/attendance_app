@@ -9,7 +9,7 @@ const uri = process.env.MONGODB_URI;
 
 
 const client = new MongoClient(uri);
-const clientPromise: Promise<MongoClient> = client.connect();
+const clientPromise: Promise<MongoClient> = new Promise((resolve) => { resolve(client) });
 
 export async function connectToDatabase() {
     const client = await clientPromise;
