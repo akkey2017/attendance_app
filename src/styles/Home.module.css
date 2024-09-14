@@ -1,5 +1,37 @@
 /* styles/Home.module.css */
 .container {
+    padding: 20px;
+}
+
+.attendance-list {
+    list-style: none;
+    padding: 0;
+}
+
+.attendance-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.button {
+    margin-left: 10px;
+    padding: 5px 10px;
+}
+
+.attending-users {
+    display: flex;
+    align-items: center;
+}
+
+.user-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
@@ -51,3 +83,14 @@
     border-bottom: 1px solid #ccc;
     padding: 0.5rem 0;
 }
+.deleteButton {  
+    margin-left: 10px;  
+    padding: 5px 10px;  
+    background-color: red;  
+    color: white;  
+    border: none;  
+    cursor: pointer;  
+}  
+.has-responded {  
+    margin-left: 50px; /* ユーザーが投票した後に適用するマージン */  
+}  
