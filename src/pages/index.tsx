@@ -1,5 +1,5 @@
 import { useSession, signIn, signOut } from 'next-auth/react';  
-import { useEffect, useState } from 'react';  
+import { use, useEffect, useState } from 'react';  
 import axios from 'axios';  
 import { generateNextWeekDates, formatDateWithoutYear } from '../utils/dateHelpers';  
 import { calculateEndTime } from '../utils/timeHelpers';  
@@ -24,6 +24,8 @@ type MeetingTime = {
 const Home = () => {  
   const { data: session, status } = useSession();  
   const [attendances, setAttendances] = useState<Attendance[]>([]);  
+  const [isAllowed, setIsAllowed] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
   const [meetingTimes, setMeetingTimes] = useState<MeetingTime[]>([]);  
   const [myAttendances, setMyAttendances] = useState<Attendance[]>([]);  
   const [activeDate, setActiveDate] = useState<string | null>(null);  
@@ -34,7 +36,7 @@ const Home = () => {
   const [endTime, setEndTime] = useState<string>('23:40');  
   const [meetingIndexes, setMeetingIndexes] = useState<number[]>([]); // 追加  
   const [comment, setComment] = useState<string>(''); // 追加  
-  const [expandedDates, setExpandedDates] = useState<string[]>([]); // 追加  
+  const [expandedDates, setExpandedDates] = useState<string[]>([]); // 追加 
 
   const dates = generateNextWeekDates();  
 
@@ -52,7 +54,7 @@ const Home = () => {
 
   const fetchMeetingTimes = async () => {  
     try {  
-      const response = await axios.get('/api/meeting-times');  
+      const response = await axios.get('/api/meeting-time');  
       setMeetingTimes(response.data);  
     } catch (error) {  
       console.error('Failed to fetch meeting times', error);  
@@ -60,11 +62,29 @@ const Home = () => {
   };  
 
   useEffect(() => {  
+    if (!session?.user?.name) {  
+      return;  
+    }  
+
+    // APIエンドポイントにユーザー名を送信して検証する  
+    const checkUser = async () => {  
+      try {  
+        const response = await axios.post('/api/checkUser', { userName: session?.user?.name });  
+        setIsAllowed(response.data.isAllowed);  
+      } catch (error) {  
+        console.error('Failed to check user', error);  
+      } finally {  
+        setLoading(false); // 追加: ローディング完了  
+      }  
+    }; 
+
+    checkUser();
+
     if (session) {  
       fetchAttendances();  
       fetchMeetingTimes();  
     }  
-  }, [session]);  
+  }, [session, isAllowed]);  
 
   useEffect(() => {  
     const fetchMeetingTimeForDate = async () => {  
@@ -94,6 +114,8 @@ const Home = () => {
     const newEndTime = calculateEndTime(startTime, repeatCount);  
     setEndTime(newEndTime);  
   }, [startTime, repeatCount]);  
+
+  
 
   const handleVote = (date: string, attendance: Attendance | null = null) => {  
     if (!session?.user) return;  
@@ -208,7 +230,7 @@ const Home = () => {
 
   if (status === 'loading') return <div>Loading...</div>;  
 
-  if (!session) {  
+  if (!session) {
     return (  
       <div className="p-6 text-center">  
         <h1 className="text-2xl font-bold mb-4">出欠シート</h1>  
@@ -218,6 +240,22 @@ const Home = () => {
       </div>  
     );  
   }  
+  if (loading) {  
+    return <div>Loading...</div>;  
+  }  
+
+  if(isAllowed == false){  
+    return (  
+      <div className="p-6 text-center">  
+        <h1 className="text-2xl font-bold mb-4">出欠シート</h1>  
+        <p className="text-lg text-red-500">このアプリは利用できません</p>  
+        <button className="px-4 py-2 bg-red-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95" onClick={() => signOut()}>  
+          サインアウト  
+        </button>  
+      </div>  
+    );
+
+  }
 
   return (  
     <div className="container mx-auto p-6">  
@@ -371,7 +409,7 @@ const Home = () => {
                         }}  
                         className="form-checkbox h-4 w-4 text-blue-600"  
                       />  
-                      <span className="ml-2">{idx + 1} 回 {startTime} - {calculateEndTime(startTime, idx + 1)}</span>  
+                      <span className="ml-2">{idx + 1} 回 {calculateMeetingPeriod([idx], startTime)}</span>  
                     </label>  
                   ))}  
                 </div>  

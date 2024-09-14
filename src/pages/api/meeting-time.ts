@@ -28,6 +28,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         res.status(200).json(record);
     } else if (req.method === 'GET') {
+        if (!req.query.date) {
+            const mtg = await db.collection('meeting-time').find().toArray(); 
+            res.status(200).json(mtg);
+        }
         const { date } = req.query;
         const meetingTime = await db.collection('meeting-time').findOne({ date });
         if (meetingTime) {
