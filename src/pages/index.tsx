@@ -356,7 +356,7 @@ const Home = () => {
                   </div>  
                 ) : (  
                   <div className="flex items-center space-x-2">  
-                    <div className="flex space-x-2">  
+                    <div className="hidden md:flex space-x-2 ">  
                       {attendingUsers.map((user, idx) => (  
                         <div key={idx} className="relative group">  
                           <img  
