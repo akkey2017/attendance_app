@@ -123,7 +123,7 @@ const Home = () => {
         setActiveType("attendance");
         setActiveDate(date);
         setActiveAttendance(newAttendance);  
-        setMeetingIndexes([]);  
+        setMeetingIndexes([0,1,2,3]);  
       } 
     } else {  
       //欠席の場合  
