@@ -5,12 +5,14 @@ const Header = () => {
     const { data: session } = useSession();
 
     return (
-        <header className="fixed top-0 left-0 w-full bg-gray-800 text-white p-4 shadow-md z-50">
+        <header className="fixed top-0 left-0 w-full bg-blue-500 text-black p-4 shadow-md z-50">
             <div className="container mx-auto flex justify-between items-center">
                 {/* ロゴ部分 */}
                 <div>
                     <Link href="/">
-                        出席管理アプリ
+                        <button className="bg-white px-4 py-2 rounded hover:bg-gray-100">
+                            出欠一覧
+                        </button>
                     </Link>
                 </div>
 
@@ -18,13 +20,10 @@ const Header = () => {
                 <nav>
                     <ul className="flex space-x-4">
                         <li>
-                            <Link href="/">
-                                ホーム
-                            </Link>
-                        </li>
-                        <li>
                             <Link href="/whiteboard">
+                                <button className="bg-white px-4 py-2 rounded hover:bg-gray-100">
                                 ホワイトボード
+                                </button>
                             </Link>
                         </li>
                         {/* 他のページのリンクもここに追加可能 */}
