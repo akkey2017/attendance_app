@@ -254,7 +254,7 @@ const Home = () => {
   };  
 
   const hasUserRespondedForDate = (date: string) => {  
-      let att = myAttendances.some((attendance) => attendance.date === date); 
+      const att = myAttendances.some((attendance) => attendance.date === date); 
     return  att;
   };  
 
