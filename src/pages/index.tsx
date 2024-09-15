@@ -392,7 +392,7 @@ const Home = () => {
             )}  
             {activeType === 'attendance' && (  
               <>  
-                <h2 className="text-lg font-bold mb-4">{activeDate} の出席登録</h2>  
+                <h2 className="text-lg font-bold mb-4 mr-32">{activeDate} の出席登録</h2>  
                 <h3 className="text-md font-bold mb-2">出席するミーティング:</h3>  
                 <div className="mb-4">  
                   {Array(repeatCount).fill(0).map((_, idx) => (  
@@ -413,7 +413,7 @@ const Home = () => {
                     </label>  
                   ))}  
                 </div>  
-                <h3 className="text-md font-bold mb-2">コメント:</h3>  
+                <h3 className="text-md font-bold mb-2"><span className=''>コメント:</span></h3>  
                 <textarea  
                   value={comment}  
                   onChange={(e) => setComment(e.target.value)}  
