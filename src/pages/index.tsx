@@ -9,8 +9,8 @@ type Attendance = {
   date: string;  
   status: boolean;  
   userImage?: string;  
-  meetingIndexes?: number[]; // 追加  
-  comment?: string; // 追加  
+  meetingIndexes?: number[];
+  comment?: string; 
   timestamp?: string;  
 };  
 
@@ -29,14 +29,14 @@ const Home = () => {
   const [meetingTimes, setMeetingTimes] = useState<MeetingTime[]>([]);  
   const [myAttendances, setMyAttendances] = useState<Attendance[]>([]);  
   const [activeDate, setActiveDate] = useState<string | null>(null);  
-  const [activeType, setActiveType] = useState<string | null>(null); // 追加: どのボタンでポップアップが呼ばれたかを区別  
-  const [activeAttendance, setActiveAttendance] = useState<Attendance | null>(null); // 追加  
+  const [activeType, setActiveType] = useState<string | null>(null);
+  const [activeAttendance, setActiveAttendance] = useState<Attendance | null>(null);
   const [startTime, setStartTime] = useState<string>('21:00');  
   const [repeatCount, setRepeatCount] = useState<number>(4);  
   const [endTime, setEndTime] = useState<string>('23:40');  
-  const [meetingIndexes, setMeetingIndexes] = useState<number[]>([]); // 追加  
-  const [comment, setComment] = useState<string>(''); // 追加  
-  const [expandedDates, setExpandedDates] = useState<string[]>([]); // 追加 
+  const [meetingIndexes, setMeetingIndexes] = useState<number[]>([]);
+  const [comment, setComment] = useState<string>('');
+  const [expandedDates, setExpandedDates] = useState<string[]>([]);
 
   const dates = generateNextWeekDates();  
 
@@ -66,7 +66,6 @@ const Home = () => {
       return;  
     }  
 
-    // APIエンドポイントにユーザー名を送信して検証する  
     const checkUser = async () => {  
       try {  
         const response = await axios.post('/api/checkUser', { userName: session?.user?.name });  
@@ -74,7 +73,7 @@ const Home = () => {
       } catch (error) {  
         console.error('Failed to check user', error);  
       } finally {  
-        setLoading(false); // 追加: ローディング完了  
+        setLoading(false);
       }  
     }; 
 
@@ -140,7 +139,7 @@ const Home = () => {
   const handleAttendanceSubmit = async () => {  
     if (!session?.user || !activeDate) return;  
 
-    const isAttendance = meetingIndexes.length > 0; // チェックボックスが一つでもチェックされている場合は出席  
+    const isAttendance = meetingIndexes.length > 0;
 
     const newAttendance: Attendance = {  
       userId: session.user.name ?? '',  
@@ -191,7 +190,7 @@ const Home = () => {
     try {  
       await axios.post('/api/meeting-time', newMeetingTime);  
       fetchMeetingTimes();  
-      setActiveDate(null); // Close the edit form  
+      setActiveDate(null);
     } catch (error) {  
       console.error('Failed to update meeting time', error);  
     }  
@@ -223,7 +222,7 @@ const Home = () => {
     const start = indexes[0];  
     const end = indexes[indexes.length - 1];  
     const startFormatted = calculateEndTime(startTime, start);  
-    const endFormatted = calculateEndTime(startTime, end + 1); // +1 to include the end of the last period  
+    const endFormatted = calculateEndTime(startTime, end + 1);
 
     return `${startFormatted} 〜 ${endFormatted}`;  
   };  
