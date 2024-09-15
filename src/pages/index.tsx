@@ -234,6 +234,10 @@ const Home = () => {
 
   const handleMeetingTimeUpdate = async () => {  
     if (!session?.user || !activeDate) return;  
+    if (repeatCount > 10){
+      alert("イタズラしないでぇ〜");
+      return;
+    }
     const newMeetingTime: MeetingTime = {  
       userId: session.user.name ?? '',  
       date: activeDate,  
