@@ -100,19 +100,53 @@ const Home = () => {
 
   
 
-  const handleVote = (date: string, attendance: Attendance | null = null) => {  
+  const handleVote = (date: string, attendance: Attendance | null = null, absent: string | "attendance") => {  
     if (!session?.user) return;  
-    setActiveDate(date);  
-    setActiveType('attendance'); // 出席ボタンを押した時  
-    setActiveAttendance(attendance);  
-    if (attendance) {  
+
+    //出席の場合  
+    if (absent == "attendance") {
+      if (attendance != null) {
+      setActiveDate(date);  
+      setActiveType('attendance');  
+      setActiveAttendance(attendance);  
       setMeetingIndexes(attendance.meetingIndexes || Array(repeatCount).fill(0).map((_, i) => i));  
-      setComment(attendance.comment || '');  
+      setComment(attendance.comment || ''); 
+      } else {
+        const newAttendance = {  
+          userId: session.user.name ?? '',  
+          date: date,  
+          status: true,  
+          userImage: session.user.image ?? '',  
+          meetingIndexes: [],  
+          comment: '',  
+        };  
+        setActiveType("attendance");
+        setActiveDate(date);
+        setActiveAttendance(newAttendance);  
+        setMeetingIndexes([]);  
+      } 
     } else {  
-      setMeetingIndexes(Array(repeatCount).fill(0).map((_, i) => i)); // 全てチェック  
-      setComment('');  
+      //欠席の場合  
+      const newAttendance = {  
+        userId: session.user.name ?? '',  
+        date: date,  
+        status: false,  
+        userImage: session.user.image ?? '',  
+        meetingIndexes: [],  
+        comment: '',  
+      };  
+
+      try {  
+        setActiveType("absent");
+        setActiveDate(date);
+        setActiveAttendance(newAttendance);  
+        setMeetingIndexes([]);  
+      } catch (error) {  
+        console.error('Failed to record absence', error);  
+      }  
     }  
   };  
+
 
   const handleEdit = (date: string) => {  
     if (!session?.user) return;  
@@ -125,7 +159,20 @@ const Home = () => {
 
     const isAttendance = meetingIndexes.length > 0;
 
-    const newAttendance: Attendance = {  
+    let newAttendance: Attendance;
+
+    if (!isAttendance) {  
+      newAttendance = {  
+        userId: session.user.name ?? '',  
+        date: activeDate,  
+        status: isAttendance,  
+        userImage: session.user.image ?? '',  
+        meetingIndexes : [],  
+        comment,  
+      };  
+    }else{
+
+    newAttendance = {  
       userId: session.user.name ?? '',  
       date: activeDate,  
       status: isAttendance,  
@@ -133,10 +180,7 @@ const Home = () => {
       meetingIndexes,  
       comment,  
     };  
-
-    if(!isAttendance){  
-      handleDelete(activeDate);  
-    }  
+  }
 
     try {  
       await axios.post('/api/attendances', newAttendance);  
@@ -147,6 +191,31 @@ const Home = () => {
       console.error('Failed to record attendance', error);  
     }  
   };  
+
+  const handleAbsenseSubmit = async () => {
+    if (!session?.user || !activeDate) return;  
+
+    const isAttendance = false;
+
+    const newAttendance: Attendance = {  
+      userId: session.user.name ?? '',  
+      date: activeDate,  
+      status: isAttendance,  
+      userImage: session.user.image ?? '',  
+      meetingIndexes,  
+      comment,  
+    };  
+
+    try {  
+      await axios.post('/api/attendances', newAttendance); 
+      setActiveDate(null); 
+      setActiveAttendance(null);  
+      fetchAttendances();  
+    } catch (error) {  
+      console.error('Failed to record absence', error);  
+    }
+
+  }
 
   const handleDelete = async (date: string) => {  
     if (!session?.user) return;  
@@ -185,7 +254,8 @@ const Home = () => {
   };  
 
   const hasUserRespondedForDate = (date: string) => {  
-    return myAttendances.some((attendance) => attendance.date === date);  
+      let att = myAttendances.some((attendance) => attendance.date === date); 
+    return  att;
   };  
 
   const meetingTimesForDate = (date: string) => {  
@@ -247,12 +317,13 @@ const Home = () => {
       <ul className="space-y-4">  
         {dates.map((date, index) => {  
           const attendingUsers = getUsersStatusForDate(date, true);  
-          const userResponse = attendances.find((att) => att.date === date);  
+          const absenceUsers = getUsersStatusForDate(date, false);
+          const userResponse = attendances.find((att) => att.date === date && att.userId === session.user?.name);  
           const meetingTime = meetingTimesForDate(date);  
           const isExpanded = expandedDates.includes(date);  
 
           return (  
-            <li key={index} className="bg-gray-100 rounded shadow transition">  
+            <li key={index} className={` rounded shadow transition ${hasUserRespondedForDate(date) && !userResponse?.status ? 'bg-gray-500' : 'bg-gray-100'}`}>  
               <div className="flex items-center justify-between p-4 cursor-pointer" onClick={() => toggleExpand(date)}>  
                 <div className="flex items-center">  
                   <button   
@@ -272,13 +343,13 @@ const Home = () => {
                   <div className="flex space-x-2">  
                     <button onClick={(e) => {  
                       e.stopPropagation();  
-                      handleVote(date);  
+                      handleVote(date, userResponse, "attendance");  
                     }} className="px-4 py-2 bg-blue-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">  
                       出席  
                     </button>  
                     <button onClick={(e) => {  
                       e.stopPropagation();  
-                      handleVote(date, null);  
+                      handleVote(date, null, "absence");  
                     }} className="px-4 py-2 bg-red-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">  
                       欠席  
                     </button>  
@@ -301,10 +372,10 @@ const Home = () => {
                     </div>  
                     <button onClick={(e) => {  
                       e.stopPropagation();  
-                      handleVote(date, userResponse);  
+                      handleVote(date, userResponse, "attendance");  
                     }} className="px-4 py-2 bg-yellow-500 text-black rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">  
                       修正  
-                    </button>  
+                    </button>
                   </div>  
                 )}  
               </div>  
@@ -325,8 +396,26 @@ const Home = () => {
                       </div>  
                     </div>  
                   ))}  
+                  <label className="block mb-2">
+                    欠席:
+                  </label>
+                  {absenceUsers.map((user, idx) => (
+                    <div key={idx} className="flex items-center space-x-4 mb-4 last:mb-0">
+                      <img
+                        src={user.userImage}
+                        alt={user.userId}
+                        className="w-10 h-10 rounded-full"
+                      />
+                      <div>
+                        <div className="font-semibold">{user.userId}</div>
+                        {user.comment && <div className="text-sm text-gray-600">{user.comment}</div>}
+                      </div>
+                      
                 </div>  
-              )}  
+                
+              ))}
+              </div>
+              )}
             </li>  
           );  
         })}  
@@ -382,9 +471,11 @@ const Home = () => {
                         checked={meetingIndexes.includes(idx)}   
                         onChange={(e) => {  
                           if (e.target.checked) {  
-                            setMeetingIndexes([...meetingIndexes, idx]);  
+                            setMeetingIndexes([...meetingIndexes, idx]); 
+                            //console.log(meetingIndexes, idx);
                           } else {  
-                            setMeetingIndexes(meetingIndexes.filter((index) => index !== idx));  
+                            setMeetingIndexes(meetingIndexes.filter((index) => index !== idx)); 
+                            //console.log(meetingIndexes); 
                           }  
                         }}  
                         className="form-checkbox h-4 w-4 text-blue-600"  
@@ -412,6 +503,22 @@ const Home = () => {
                     className="px-4 py-2 bg-red-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">キャンセル</button>  
                 </div>  
               </>  
+            )}
+            {activeType === 'absent' && (
+              <>
+                <h2 className="text-lg font-bold mb-4 mr-32">{activeDate} の欠席登録</h2>  
+                <div className="flex space-x-2 mt-4">  
+                  <button   
+                    onClick={handleAbsenseSubmit}   
+                    className="px-4 py-2 bg-blue-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">保存</button>  
+                  <button   
+                    onClick={() => {  
+                      setActiveDate(null);  
+                      setActiveAttendance(null);  
+                    }}   
+                    className="px-4 py-2 bg-red-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">キャンセル</button>  
+                </div>
+              </>
             )}  
           </div>  
         </div>  

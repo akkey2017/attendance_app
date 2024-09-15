@@ -7,6 +7,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const { db } = await connectToDatabase();  
 
     if (req.method === 'POST') {  
+        console.log('POST request received');
         // 出欠情報を記録  
         try {  
             const { userId, date, status, userImage, meetingIndexes, comment } = req.body;  
