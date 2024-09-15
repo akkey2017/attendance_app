@@ -3,23 +3,7 @@ import { use, useEffect, useState } from 'react';
 import axios from 'axios';  
 import { generateNextWeekDates, formatDateWithoutYear } from '../utils/dateHelpers';  
 import { calculateEndTime } from '../utils/timeHelpers';  
-
-type Attendance = {  
-  userId: string;  
-  date: string;  
-  status: boolean;  
-  userImage?: string;  
-  meetingIndexes?: number[];
-  comment?: string; 
-  timestamp?: string;  
-};  
-
-type MeetingTime = {  
-  userId: string;  
-  date: string;  
-  startTime: string;  
-  repeatCount: number;  
-};  
+import Header from '../components/Header';
 
 const Home = () => {  
   const { data: session, status } = useSession();  
@@ -246,11 +230,9 @@ const Home = () => {
   if(isAllowed == false){  
     return (  
       <div className="p-6 text-center">  
+        <Header />
         <h1 className="text-2xl font-bold mb-4">出欠シート</h1>  
         <p className="text-lg text-red-500">このアプリは利用できません</p>  
-        <button className="px-4 py-2 bg-red-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95" onClick={() => signOut()}>  
-          ログアウト
-        </button>  
       </div>  
     );
 
@@ -258,10 +240,9 @@ const Home = () => {
 
   return (  
     <div className="container mx-auto p-6">  
+      <Header />
+      <main className="container mx-auto p-6 pt-20"></main>
       <h1 className="text-xl font-bold mb-4">{session.user?.name} でログイン中</h1>  
-      <button className="px-4 py-2 bg-red-500 text-white rounded mb-6 transition duration-200 ease-in-out transform hover:scale-105 active:scale-95" onClick={() => signOut()}>  
-        ログアウト
-      </button>  
       
       <ul className="space-y-4">  
         {dates.map((date, index) => {  
