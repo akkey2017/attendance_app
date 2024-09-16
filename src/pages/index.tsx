@@ -351,7 +351,7 @@ const Home = () => {
                     }} className="px-4 py-2 bg-blue-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">  
                       出席  
                     </button>  
-                    <button onClick={(e) => {  
+                    <button onClick={(e) => {
                       e.stopPropagation();  
                       handleVote(date, null, "absence");  
                     }} className="px-4 py-2 bg-red-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">  
