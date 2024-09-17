@@ -14,3 +14,8 @@ type MeetingTime = {
     startTime: string;
     repeatCount: number;
 };
+
+type EditorProps = {
+    doc: Y.Doc,
+    provider: any;
+}
