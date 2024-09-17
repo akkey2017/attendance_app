@@ -13,16 +13,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
     if (request.method !== 'POST') {  
         response.status(405).json({ message: "Method Not Allowed" });  
         return;  
-    }  
-    const room = await liveblocks.getRoom(request.body.room);
-    if (!room) {
-        liveblocks.createRoom(request.body.room,{
-            defaultAccesses: ["room:write"],
-            groupsAccesses: { "user": ["room:write"] },
-        }); 
-    }
-
-
+    } 
     const { body,status } = await liveblocks.identifyUser(
         {
             userId: request.body.session.user.name,
