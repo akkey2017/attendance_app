@@ -14,12 +14,19 @@ export default async function handler(request: NextApiRequest, response: NextApi
         response.status(405).json({ message: "Method Not Allowed" });  
         return;  
     }  
+    const room = await liveblocks.getRoom(request.body.room);
+    if (!room) {
+        liveblocks.createRoom(request.body.room,{
+            defaultAccesses: ["room:write"],
+            groupsAccesses: { "user": ["room:write"] },
+        }); 
+    }
 
 
     const { body,status } = await liveblocks.identifyUser(
         {
             userId: request.body.session.user.name,
-            groupIds: ["my-group-id"],
+            groupIds: ["user"],
         },
         { userInfo: { name: request.body.session.user.name, avatar: request.body.session.user.image, color: '#' + (0x1000000 + Math.random() * 0xffffff).toString(16).substring(1, 7), } },
     );
