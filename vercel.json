@@ -3,6 +3,10 @@
         {
             "path": "/api/cron",
             "schedule": "59 23 * * *"
+        },
+        {
+            "path": "/api/create-room",
+            "schedule": "* * * * 0"
         }
     ]
 }
