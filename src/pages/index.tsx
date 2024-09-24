@@ -4,6 +4,7 @@ import axios from 'axios';
 import { generateNextWeekDates, formatDateWithoutYear } from '../utils/dateHelpers';  
 import { calculateEndTime } from '../utils/timeHelpers';  
 import Header from '../components/Header';
+import Loading from '../components/Loading';
 
 const Home = () => {  
   const { data: session, status } = useSession();  
@@ -285,7 +286,7 @@ const Home = () => {
     return `${startFormatted} 〜 ${endFormatted}`;  
   };  
 
-  if (status === 'loading') return <div>Loading...</div>;  
+  if (status === 'loading') return <div><Loading /> </div>;  
 
   if (!session) {
     return (  
@@ -298,7 +299,7 @@ const Home = () => {
     );  
   }  
   if (loading) {  
-    return <div>Loading...</div>;  
+    return <div><Loading /> </div>;  
   }  
 
   if(isAllowed == false){  

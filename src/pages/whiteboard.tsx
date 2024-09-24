@@ -14,8 +14,7 @@ const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
 import Header from "@/components/Header";
 import { Avatars } from "@/components/Avatars";
 //import Cursor from "@/components/Cursor";
-
-
+import Loading from "@/components/Loading";
 
 const Whiteboard = () => {
 
@@ -55,7 +54,7 @@ const Whiteboard = () => {
     }
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div><Loading /> </div>;
     }
     if (isAllowed == false) {
         return (
@@ -93,7 +92,7 @@ const Whiteboard = () => {
                     return JSON.parse(res);
                 }}>
                     <RoomProvider id="my-room" initialPresence={{ cursor: null }}>
-                        <ClientSideSuspense fallback={<div>Loading…</div>}>
+                        <ClientSideSuspense fallback={<div><Loading /> </div>}>
                             <Avatars />
                             <Editor />
                         </ClientSideSuspense>
