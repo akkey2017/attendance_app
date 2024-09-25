@@ -1,7 +1,7 @@
 import { useSession, signIn, signOut } from 'next-auth/react';  
 import { use, useEffect, useState } from 'react';  
 import axios from 'axios';  
-import { generateNextWeekDates, formatDateWithoutYear } from '../utils/dateHelpers';  
+import { generateNextWeekDates, formatDateWithoutYear, formatDay } from '../utils/dateHelpers';  
 import { calculateEndTime } from '../utils/timeHelpers';  
 import Header from '../components/Header';
 
@@ -338,7 +338,7 @@ const Home = () => {
                     className="mr-4 px-2 py-1 bg-gray-300 text-black rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">  
                     編集  
                   </button>  
-                  <span className="text-lg">{formatDateWithoutYear(date)}</span>  
+                  <span className="text-lg">{formatDateWithoutYear(date)}&nbsp;({formatDay(date)})</span>  
                   <span className="ml-2 text-sm text-gray-600">  
                     {meetingTime.startTime} - {calculateEndTime(meetingTime.startTime, meetingTime.repeatCount)}  
                   </span>  

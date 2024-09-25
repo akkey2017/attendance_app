@@ -22,3 +22,9 @@ export function getPastDate(days: number): string {
     date.setDate(date.getDate() - days);  
     return date.toISOString().split('T')[0];  
 }
+
+export function formatDay(date: string): string {
+    const JP_DAY = ['日', '月', '火', '水', '木', '金', '土'];
+    const day = new Date(date).getDay();
+    return JP_DAY[day];
+}
