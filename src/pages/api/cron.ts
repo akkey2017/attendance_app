@@ -33,7 +33,7 @@ const autoSetupMeetingTime = async (db: Db) => {
                 const meetingTime = timeStartsMeeting[index];
                 const meetingCount = meetingCounts[index];
 
-                const existingMeeting = await db.collection('meeting-time').findOne({ date: checkDate });
+                const existingMeeting = await db.collection('meeting-time').findOne({ date: date });
                 if (!existingMeeting) {
                     await db.collection('meeting-time').insertOne({
                         userId: "cron-job",
