@@ -26,6 +26,7 @@ const autoSetupMeetingTime = async (db: Db) => {
             const checkDate = new Date(today);
             checkDate.setDate(today.getDate() + i);
             const dayOfWeek = checkDate.toLocaleString('en-US', { weekday: 'long' });
+            const date = checkDate.toISOString().split('T')[0];
 
             const index = meetingWeekDay.indexOf(dayOfWeek);
             if (index !== -1) {
@@ -36,11 +37,13 @@ const autoSetupMeetingTime = async (db: Db) => {
                 if (!existingMeeting) {
                     await db.collection('meeting-time').insertOne({
                         userId: "cron-job",
-                        date: checkDate,
+                        date: date,
                         startTime: meetingTime,
                         repeartCount: meetingCount
                     });
                     console.log(`Meeting time set for ${dayOfWeek} at ${meetingTime}`);
+                }else{
+                    console.log(`Meeting time already set for ${dayOfWeek} at ${meetingTime}`);
                 }
             }
         }
