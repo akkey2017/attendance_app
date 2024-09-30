@@ -26,14 +26,19 @@ export default async function handler(
                     continue;  
                 }
                 const groupId = event.source.groupId;  
-                await saveGroupId(db, groupId);  
+                const alreadySaved = await checkAndSaveGroupId(db, groupId);  
+                if (alreadySaved) {  
+                    console.log('Group ID saved:', groupId);  
+                }else{
+                    await client.replyMessage(
+                        {
+                            replyToken: event.replyToken,
+                            messages: [{ type: 'text', text: 'グループIDを保存しました' }]
+                        }
+                    );  
+                }
 
-                await client.replyMessage(
-                    {
-                        replyToken: event.replyToken,
-                        messages: [{ type: 'text', text: 'グループIDを保存しました' }]
-                    }
-                );  
+
             }
         }  
         return res.status(200).json({ status: 'success' });  
@@ -42,15 +47,20 @@ export default async function handler(
     }  
 }  
 
-async function saveGroupId(db: Db, groupId: string) {  
+async function checkAndSaveGroupId(db: Db, groupId: string) {  
     try {  
         const collection = db.collection('group-ids');  
-        await collection.updateOne(  
-            { groupId: groupId },  
-            { $set: { groupId: groupId } },  
-            { upsert: true }
-        );  
-        console.log('Group ID saved:', groupId);  
+        const group = await collection.findOne({ groupId: groupId });
+        if (group) {  
+            return true;  
+        }else{
+            await collection.updateOne(  
+                { groupId: groupId },  
+                { $set: { groupId: groupId } },  
+                { upsert: true }
+            );  
+            console.log('Group ID saved:', groupId);  
+        }
     } catch (error) {  
         console.error('Failed to save Group ID:', error);  
     }  
