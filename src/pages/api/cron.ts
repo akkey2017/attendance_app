@@ -39,7 +39,7 @@ const autoSetupMeetingTime = async (db: Db) => {
                         userId: "cron-job",
                         date: date,
                         startTime: meetingTime,
-                        repeartCount: meetingCount
+                        repeatCount: meetingCount
                     });
                     console.log(`Meeting time set for ${dayOfWeek} at ${meetingTime}`);
                 }else{
