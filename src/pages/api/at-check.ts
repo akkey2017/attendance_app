@@ -29,7 +29,7 @@ const checkAttendances = async (db: Db) => {
     const today = new Date();
     today.setTime(today.getTime() - today.getTimezoneOffset() * 60 * 1000);
     const date = today.toISOString().split('T')[0];
-    let value: Attendance[] = [];
+    const value: Attendance[] = [];
     const attendances = await db.collection('attendances').find({ date: date }).toArray();
     attendances.forEach(async (attendance) => {
         if (attendance.status) {
