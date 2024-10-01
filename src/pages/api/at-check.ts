@@ -117,7 +117,7 @@ export default async function (
     if (req.query.secret !== process.env.CRON_SECRET) {
         return res.status(401).end();
     }
-    if (req.method == 'POST') {
+    if (req.method == 'GET') {
         const { db } = await connectToDatabase();
 
         await checkAndAnnounce(db);
