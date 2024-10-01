@@ -33,7 +33,7 @@ export default async function handler(
                     await client.replyMessage(
                         {
                             replyToken: event.replyToken,
-                            messages: [{ type: 'text', text: 'グループIDを保存しました' }]
+                            messages: [{ type: 'text', text: 'グループIDを保存しました。' }]
                         }
                     );  
                 }
