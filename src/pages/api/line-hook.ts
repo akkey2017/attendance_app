@@ -24,6 +24,8 @@ export default async function handler(
             if (event.type === 'message' && event.source.type === 'group') {  
                 if (event.message.type !== 'text') {  
                     continue;  
+                }else if (!event.message.text.startsWith("!")) {  
+                    continue;  
                 }
                 const groupId = event.source.groupId;  
                 const alreadySaved = await checkAndSaveGroupId(db, groupId);  
