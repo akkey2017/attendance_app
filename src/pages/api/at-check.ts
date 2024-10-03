@@ -8,7 +8,7 @@ const config = {
     channelSecret: process.env.CHANNEL_SECRET as string,
 };
 const { MessagingApiClient } = messagingApi;
-const defailtStartTime = '21:00';
+const defaultStartTime = '21:00';
 const defaultrepeat = 4;
 
 
@@ -46,10 +46,11 @@ const checkAndAnnounce = async (db: Db) => {
         const date = today.toISOString().split('T')[0];
 
         const meetingTime = await db.collection('meeting-time').findOne({ date: date });
-        console.log(meetingTime)
         if (meetingTime) {
             const startTime = new Date(`${date}T${meetingTime.startTime}:00`);
+            startTime.setTime(startTime.getTime() - startTime.getTimezoneOffset() * 60 * 1000);
             const timeDifference = (startTime.getTime() - today.getTime()) / (1000 * 60 * 60);
+
 
             if (timeDifference < 2 && timeDifference >= 1) {
                 const client = new MessagingApiClient(config);
@@ -76,7 +77,8 @@ const checkAndAnnounce = async (db: Db) => {
                 });
             }
         } else {
-            const startTime = new Date(`${date}T${defailtStartTime}:00`);
+            const startTime = new Date(`${date}T${defaultStartTime}:00`);
+            startTime.setTime(startTime.getTime() - startTime.getTimezoneOffset() * 60 * 1000);
             const timeDifference = (startTime.getTime() - today.getTime()) / (1000 * 60 * 60);
 
             if (timeDifference < 2 && timeDifference >= 1) {
@@ -84,17 +86,17 @@ const checkAndAnnounce = async (db: Db) => {
                 const attendances = await checkAttendances(db);
                 let messageText = '';
                 if (attendances.length === 0) {
-                    messageText = `${date}のミーティングは${defailtStartTime}からです。\n出席者はいません。`;
+                    messageText = `${date}のミーティングは${defaultStartTime}からです。\n出席者はいません。`;
                 } else {
 
-                    messageText = `${date}のミーティングは${defailtStartTime}からです。\n出席者は以下の通りです。\n全て出席する人:\n${attendances.map((attendance) => {
+                    messageText = `${date}のミーティングは${defaultStartTime}からです。\n出席者は以下の通りです。\n全て出席する人:\n${attendances.map((attendance) => {
                         if (attendance.meetingIndexes && attendance.meetingIndexes.length === 4) {
                             return `@${attendance.userId}`;
                         }
                     }).join('\n')
                         }\n途中参加、途中退席:\n${attendances.map((attendance) => {
                             if (attendance.meetingIndexes && attendance.meetingIndexes.length !== 4) {
-                                return `@${attendance.userId} (${calculateMeetingPeriod(attendance.meetingIndexes, defailtStartTime)})`;
+                                return `@${attendance.userId} (${calculateMeetingPeriod(attendance.meetingIndexes, defaultStartTime)})`;
                             }
                         }).join('\n')
                         }`;
