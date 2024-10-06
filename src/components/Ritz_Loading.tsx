@@ -7,7 +7,7 @@ interface RitzLoadingProps {
     size?: "small" | "medium" | "large"
 }
 
-export function RitzLoading({ spcolor = "blue-600", color = "text-primary", size = "medium" }: RitzLoadingProps) {
+export function RitzLoading({color = "text-primary", size = "medium" }: RitzLoadingProps) {
     const sizeClasses = {
         small: "text-2xl",
         medium: "text-4xl",
@@ -21,7 +21,7 @@ export function RitzLoading({ spcolor = "blue-600", color = "text-primary", size
 
     return (
         <div className={`font-bold flex items-center ${color} ${sizeClasses[size]}`}>
-            <div className={`border-gray-300 h-${spinnerSize[size]} w-${spinnerSize[size]} animate-spin rounded-full border-8 border-t-${spcolor}`} />
+            <div className={`border-gray-300 h-${spinnerSize[size]} w-${spinnerSize[size]} animate-spin rounded-full border-8 border-t-blue-600`} />
             {"Ritz".split("").map((letter, index) => (
                 <motion.span
                     key={index}
