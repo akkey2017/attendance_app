@@ -4,6 +4,8 @@ import axios from 'axios';
 import { generateNextWeekDates, formatDateWithoutYear, formatDay } from '../utils/dateHelpers';
 import { calculateEndTime } from '../utils/timeHelpers';
 import Header from '../components/Header';
+import { RitzLoading } from '@/components/Ritz_Loading';
+import CustomButton from '@/components/Custom_Button';
 
 const Home = () => {
   const { data: session, status } = useSession();
@@ -285,7 +287,7 @@ const Home = () => {
     return `${startFormatted} 〜 ${endFormatted}`;
   };
 
-  if (status === 'loading') return <div>Loading...</div>;
+  if (status === 'loading') return <div><div className='container mx-auto p-6'><RitzLoading /></div></div>;
 
   if (!session) {
     return (
@@ -298,7 +300,7 @@ const Home = () => {
     );
   }
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><div className='container mx-auto p-6'><RitzLoading /></div></div>;
   }
 
   if (isAllowed == false) {
@@ -330,33 +332,27 @@ const Home = () => {
             <li key={index} className={` rounded shadow transition ${hasUserRespondedForDate(date) && !userResponse?.status ? 'bg-gray-500' : 'bg-gray-100'}`}>
               <div className="flex items-center justify-between p-4 cursor-pointer" onClick={() => toggleExpand(date)}>
                 <div className="flex items-center">
-                  <button
-                    onClick={(e) => {
+                  <CustomButton
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                       e.stopPropagation();
                       handleEdit(date);
                     }}
-                    className="mr-4 px-2 py-1 bg-gray-300 text-black rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">
-                    編集
-                  </button>
-                  <span className="text-lg">{formatDateWithoutYear(date)}&nbsp;({formatDay(date)})</span>
-                  <span className="ml-2 text-sm text-gray-600">
+                    text='編集' color='grey' />
+                  <span className="text-lg font-bold gothic">&nbsp;&nbsp;{formatDateWithoutYear(date)}&nbsp;({formatDay(date)})</span>
+                  <span className="ml-2 text-sm text-gray-600 font-bold gothic">
                     {meetingTime.startTime} - {calculateEndTime(meetingTime.startTime, meetingTime.repeatCount)}
                   </span>
                 </div>
                 {!hasUserRespondedForDate(date) ? (
                   <div className="flex space-x-2">
-                    <button onClick={(e) => {
+                    <CustomButton onClick={(e) => {
                       e.stopPropagation();
                       handleVote(date, userResponse, "attendance");
-                    }} className="px-4 py-2 bg-blue-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">
-                      出席
-                    </button>
-                    <button onClick={(e) => {
+                    }} text="出席" color="blue" size="medium" />
+                    <CustomButton onClick={(e) => {
                       e.stopPropagation();
                       handleVote(date, null, "absence");
-                    }} className="px-4 py-2 bg-red-500 text-white rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">
-                      欠席
-                    </button>
+                    }} text="欠席" color="red" size="medium" />
                   </div>
                 ) : (
                   <div className="flex items-center space-x-2">
@@ -374,12 +370,10 @@ const Home = () => {
                         </div>
                       ))}
                     </div>
-                    <button onClick={(e) => {
+                    <CustomButton onClick={(e) => {
                       e.stopPropagation();
                       handleVote(date, userResponse, "attendance");
-                    }} className="px-4 py-2 bg-yellow-500 text-black rounded transition duration-200 ease-in-out transform hover:scale-105 active:scale-95">
-                      修正
-                    </button>
+                    }} text="修正" color="orange" size="medium" />
                   </div>
                 )}
               </div>
@@ -426,6 +420,7 @@ const Home = () => {
       </ul>
 
       {activeDate && (
+        
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded shadow-lg">
             {activeType === 'edit' && (

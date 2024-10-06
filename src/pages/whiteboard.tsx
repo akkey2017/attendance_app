@@ -13,6 +13,7 @@ import dynamic from "next/dynamic";
 const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
 import Header from "@/components/Header";
 import { Avatars } from "@/components/Avatars";
+import { RitzLoading } from "@/components/Ritz_Loading";
 //import Cursor from "@/components/Cursor";
 
 
@@ -55,7 +56,7 @@ const Whiteboard = () => {
     }
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div><div className='container mx-auto p-6'><RitzLoading /></div></div>;
     }
     if (isAllowed == false) {
         return (
@@ -93,7 +94,7 @@ const Whiteboard = () => {
                     return JSON.parse(res);
                 }}>
                     <RoomProvider id="my-room" initialPresence={{ cursor: null }}>
-                        <ClientSideSuspense fallback={<div>Loading…</div>}>
+                        <ClientSideSuspense fallback={<div><div className='container mx-auto p-6'><RitzLoading /></div></div>}>
                             <Avatars />
                             <Editor />
                         </ClientSideSuspense>

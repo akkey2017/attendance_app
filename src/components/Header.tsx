@@ -1,6 +1,7 @@
 import { useState } from 'react'; // useStateをインポート  
 import { signIn, signOut, useSession } from 'next-auth/react';  
 import Link from 'next/link';  
+import CustomButton from './Custom_Button';
 
 const Header = () => {  
   const { data: session } = useSession();  
@@ -12,9 +13,7 @@ const Header = () => {
         {/* ロゴ部分 */}  
         <div>  
           <Link href="/">  
-            <button className="bg-white px-3 py-2 rounded hover:bg-gray-100 text-sm sm:text-base">  
-              出欠一覧  
-            </button>  
+            <CustomButton text="出欠一覧" color="blue" size="large" />
           </Link>  
         </div>  
 
@@ -23,9 +22,7 @@ const Header = () => {
           <ul className="flex space-x-2 sm:space-x-4">  
             <li>  
               <Link href="/whiteboard">  
-                <button className="bg-white px-3 py-2 rounded hover:bg-gray-100 text-sm sm:text-base">  
-                  ホワイトボード  
-                </button>  
+                <CustomButton text="ホワイトボード" color="blue" size="large"/>
               </Link>  
             </li>  
           </ul>  
@@ -41,8 +38,6 @@ const Header = () => {
                 className="w-8 h-8 rounded-full cursor-pointer"  
                 onClick={() => setShowLogout(!showLogout)}  
               />
-
-              {/* モバイルで表示されるログアウトボタン */}  
               {showLogout && (  
                 <div className="absolute top-full right-0 mt-2 bg-red-500 hover:bg-red-600 shadow-lg rounded z-50 p-2 transition-transform transform origin-top animate-dropdown">  
                   <button  
