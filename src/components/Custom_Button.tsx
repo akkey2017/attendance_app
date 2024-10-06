@@ -20,7 +20,7 @@ export default function CustomButton({ size = "small", text, color = "black", on
 
     return (
         <motion.button
-            className={`relative bg-white overflow-hidden ${sizeClasses[size]} rounded-xl shadow-md`}
+            className={`relative z-0 bg-white overflow-hidden ${sizeClasses[size]} rounded-xl shadow-md`}
             style={{ border: `2px solid ${color}` }}
             whileHover="hover"
             whileTap={{
@@ -36,7 +36,7 @@ export default function CustomButton({ size = "small", text, color = "black", on
                     hover: { color: 'white', transition: { duration: 0.3 } }
                 }}
             >
-                <span className={`${textSizes[size]} font-bold gothic whitespace-nowrap`}>
+                <span className={`${textSizes[size]} z-10 font-bold gothic whitespace-nowrap`}>
                     {text}
                 </span>
             </motion.div>
