@@ -30,7 +30,7 @@ export default function CustomButton({ size = "small", text, color = "black", on
             onClick={onClick}  
         >
             <motion.div
-                className="relative z-10 flex items-center justify-center pointer-events-none"
+                className="relative flex items-center justify-center pointer-events-none"
                 initial={{ color: color }}
                 variants={{
                     hover: { color: 'white', transition: { duration: 0.3 } }
